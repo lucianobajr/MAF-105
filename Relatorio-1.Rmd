@@ -1,0 +1,146 @@
+---
+title: "Relatório 1"
+author: "Luciano Belo de Alcântara Júnior"
+date: "15/08/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+require(data.table)
+```
+
+## Considere as medidas de temperatura de três cidades ao longo de 200 dias. Conforme apresentado abaixo:
+
+```{r df}
+set.seed(3897) # matrícula como seed
+df <- data.frame( # dataframe com as temperaturas das cidades
+  x1 = rnorm(200,30,10), # ( n, média, desvio padrão  )
+  x2 = rnorm(200,15,5),  # ( 200 valores, média 15 e desvio padrão 5 ) 
+  x3 = rnorm(200,0,15)
+)
+
+# seis primeiras linhas do dataframe
+head(df) 
+```
+
+# Calculem a média, a mediana, os quartis, a variância, desvio padrão e o coeficiente de variação
+
+Para isso, teremos duas tabelas divididas em: 
+- média, mediana, primeiro e terceiro quartis
+- variância, desvio padrão e coeficiente de variação
+
+## Primeira Tabela
+```{r table-1, echo=TRUE}
+
+table1 <- data.table(
+  cidades = c(
+    "x1", "x2", "x3",
+    "x1", "x2", "x3",
+    "x1", "x2", "x3",
+    "x1", "x2", "x3"
+  ),  
+  campos = c(
+    "média", "média", "média",  
+    "mediana", "mediana", "mediana",   
+    "1o Quartil", "1o Quartil", "1o Quartil",
+    "3o Quartil", "3o Quartil", "3o Quartil"
+  ),  
+  valores = c(
+    mean(x = df$x1), mean(x = df$x2), mean(x = df$x3),
+    median(x = df$x1), median(x = df$x2), median(x = df$x3), 
+    quantile(df$x1,.25), quantile(df$x2,.25), quantile(df$x3,.25),
+    quantile(df$x1,.75), quantile(df$x2,.75), quantile(df$x3,.75)
+  )
+) 
+
+# muda formato da tabela de “long” para “wide”
+newtable1 <- reshape(data = table1, idvar = "cidades", timevar = "campos", direction = "wide")
+
+# muda o nome das colunas
+colnames(newtable1) <- c("cidades", "média", "mediana","1o Quartil","3o Quartil")
+
+print(newtable1)
+```
+## Segunda Tabela
+```{r table-2, echo=TRUE}
+
+table2 <- data.table(
+  cidades = c(
+    "x1", "x2", "x3",
+    "x1", "x2", "x3",
+    "x1", "x2", "x3"
+  ),  
+  campos = c(
+    "variância", "variância", "variância",
+    "desvio padrão", "desvio padrão", "desvio padrão",
+    "coeficiente de variação", "coeficiente de variação", "coeficiente de variação"
+  ),  
+  valores = c(
+    var(df$x1), var(df$x2), var(df$x3),
+    sd(df$x1), sd(df$x2), sd(df$x3),
+    100*sd(df$x1)/mean(x = df$x1), 100*sd(df$x2)/mean(x = df$x2), 100*sd(df$x3)/mean(x = df$x3)
+  )
+) 
+
+# muda formato da tabela de “long” para “wide”
+newtable2<- reshape(data = table2, idvar = "cidades", timevar = "campos", direction = "wide")
+
+# muda o nome das colunas
+colnames(newtable2) <- c("cidades","variância","desvio padrão","coeficiente de variação")
+
+print(newtable2)
+```
+
+## Abaixo temos os resultados obtidos a partir da função summary é capaz de resumir vários tipos de objetos em uma única função. Dentre esses objetos encontram-se o primeiro e o terceiro quartil, sendo que o segundo quartil é dado indiretamente através da mediana
+
+### Cidade 1 (x1)
+```{r df$x1}
+summary(df$x1)
+```
+### Cidade 2 (x2)
+```{r df$x2}
+summary(df$x2)
+```
+### Cidade 3 (x3)
+```{r df$x3}
+summary(df$x3)
+```
+
+## Análise dos dados obtidos
+
+A partir dos dados obtidos podemos perceber a cidade 2 possui uma maior homogeneidade de seus dados, seguida da cidade 1 e por fim a cidade 3. Isto se dá pelo fato do desvio padrão declarados na inicialização serem 5, 10 e 15 respectivamente, sendo assim, quanto maior o desvio padrão mais dispersos estarão seus dados em relação à sua média
+
+# Gráficos
+## Histograma
+
+```{r histograma}
+hist(df$x1, main = "Histograma da Cidade 1")
+
+hist(df$x2, main = "Histograma da Cidade 2")
+
+hist(df$x3, main = "Histograma da Cidade 3")
+```
+
+## Boxplot
+
+### Cidade 1
+```{r boxplot1}
+boxplot(df$x1)
+```
+
+### Cidade 2
+```{r boxplot2}
+boxplot(df$x2)
+```
+
+### Cidade 3
+```{r boxplot3}
+boxplot(df$x3)
+```
+
+
+## Assimetria dos dados
+
+Como já esperado a cidade 2 possui menor assimetria, seguida da cidade 1 e por fim da cidade 3. Isto se dá pois assim como já explicado anteriormente, quanto maior o desvio padrão maior será sua dispersão com relação a média, ocasionamente por conseguinte, maior assimetria. Ademais, percebe-se que a cidade 3 possui uma grande quantidade de dados discrepantes, por exemplo, tomando como parâmetro a média seu maior e menor valores tem diferenças de 42,36 e 54,76 respectivamente. Enquanto a cidade 2 que possui menor assimetria, tem 11,76 e 14.77 de diferença para maior e menor valores com relação a média.
+
