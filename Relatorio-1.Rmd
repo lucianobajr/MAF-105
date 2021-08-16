@@ -27,6 +27,7 @@ head(df)
 # Calculem a média, a mediana, os quartis, a variância, desvio padrão e o coeficiente de variação
 
 Para isso, teremos duas tabelas divididas em: 
+
 - média, mediana, primeiro e terceiro quartis
 - variância, desvio padrão e coeficiente de variação
 
@@ -92,7 +93,7 @@ colnames(newtable2) <- c("cidades","variância","desvio padrão","coeficiente de
 print(newtable2)
 ```
 
-## Abaixo temos os resultados obtidos a partir da função summary é capaz de resumir vários tipos de objetos em uma única função. Dentre esses objetos encontram-se o primeiro e o terceiro quartil, sendo que o segundo quartil é dado indiretamente através da mediana
+## Abaixo temos os resultados obtidos a partir da função summary que é capaz de resumir vários tipos de objetos em uma única função. Dentre esses objetos encontram-se o primeiro e o terceiro quartil, sendo que o segundo quartil é dado indiretamente através da mediana
 
 ### Cidade 1 (x1)
 ```{r df$x1}
